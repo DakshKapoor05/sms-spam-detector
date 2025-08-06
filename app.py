@@ -14,7 +14,7 @@ with open("tokenizer_config.json", "r") as f:
 
 tokenizer = tokenizer_from_json(tokenizer_json)
 # Load the trained model
-model = tf.keras.models.load_model("sms_spam_model.keras")
+model = tf.keras.models.load_model("sms_spam_model.h5")
 
 # Constants
 vocab_size = 5000
