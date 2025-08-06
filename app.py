@@ -1,3 +1,5 @@
+# sms_spam_app.py
+
 import streamlit as st
 import tensorflow as tf
 from tensorflow.keras.preprocessing.sequence import pad_sequences
@@ -13,22 +15,20 @@ with open("tokenizer_config.json", "r") as f:
     tokenizer_json = f.read()
 tokenizer = tokenizer_from_json(tokenizer_json)
 
-# Load the trained model
+# Load trained model
 model = tf.keras.models.load_model("sms_spam_model.h5")
 
-# Constants (must match training)
+# Constants
 max_length = 100
-
-# Setup stopwords and punctuation for preprocessing
 stop_words = set(stopwords.words("english"))
 
 def preprocess_text(text):
     # Remove punctuation
     text = text.translate(str.maketrans('', '', string.punctuation))
-    # Lowercase and remove stopwords
+    # Lowercase and remove stop words
     return ' '.join([word for word in text.lower().split() if word not in stop_words])
 
-# Streamlit UI setup
+# Streamlit UI
 st.set_page_config(page_title="SMS Spam Detection", layout="centered")
 st.title("📱 SMS Spam Detection App")
 st.markdown("Enter an SMS message below to check whether it's **spam** or **ham**.")
