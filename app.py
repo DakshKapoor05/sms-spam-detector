@@ -5,9 +5,14 @@ import pickle
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 
 # Load the saved tokenizer
-with open("tokenizer.pickle", "rb") as handle:
-    tokenizer = pickle.load(handle)
+import json
+from tensorflow.keras.preprocessing.text import tokenizer_from_json
 
+# Load tokenizer from JSON
+with open("tokenizer_config.json", "r") as f:
+    tokenizer_json = f.read()
+
+tokenizer = tokenizer_from_json(tokenizer_json)
 # Load the trained model
 model = tf.keras.models.load_model("sms_spam_model.keras")
 
