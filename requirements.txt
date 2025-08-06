@@ -1,5 +1,5 @@
+tensorflow==2.13.0
 streamlit
-tensorflow
 keras
 numpy
 pandas
@@ -7,3 +7,4 @@ scikit-learn
 matplotlib
 seaborn
 pickle-mixin
+
