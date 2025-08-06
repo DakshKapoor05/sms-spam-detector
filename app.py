@@ -2,40 +2,45 @@ import streamlit as st
 import tensorflow as tf
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 from tensorflow.keras.preprocessing.text import tokenizer_from_json
+import numpy as np
+import json
 
-# Load tokenizer from JSON
+# Load tokenizer from tokenizer_config.json
 with open("tokenizer_config.json", "r") as f:
     tokenizer_json = f.read()
-tokenizer = tokenizer_from_json(tokenizer_json)
+    tokenizer = tokenizer_from_json(tokenizer_json)
 
-# Load trained model
-model = tf.keras.models.load_model("sms_spam_model.h5")
+# Load the trained Keras model
+model = tf.keras.models.load_model("sms_spam_model.keras")
 
-# Constants
-max_length = 100
+# Parameters
+max_length = 100  # same as used during training
 
-# Streamlit UI setup
-st.set_page_config(page_title="SMS Spam Detection", layout="centered")
-st.title("📱 SMS Spam Detection App")
-st.markdown("Enter an SMS message below to check whether it's **spam** or **ham**.")
+# UI
+st.title("📱 SMS Spam Detection")
+st.write("Enter a message to check if it's spam or not:")
 
-user_input = st.text_area("✉️ Enter SMS message:", height=150)
+# Text input
+user_input = st.text_area("Your message here:")
 
-def classify_message(message):
-    # No preprocessing applied here (original)
-    sequence = tokenizer.texts_to_sequences([message])
-    padded = pad_sequences(sequence, maxlen=max_length, padding='post')
-    prediction = model.predict(padded)[0][0]
-    return prediction
-
-if st.button("🔍 Check Message"):
+# Predict button
+if st.button("Predict"):
     if user_input.strip() == "":
-        st.warning("Please enter a message to classify.")
+        st.warning("Please enter a message.")
     else:
-        pred = classify_message(user_input)
-        if pred >= 0.5:
-            st.error("🚫 This message is **Spam**.")
-        else:
-            st.success("✅ This message is **Ham** (Not Spam).")
+        # Preprocess input
+        sequence = tokenizer.texts_to_sequences([user_input])
+        padded = pad_sequences(sequence, maxlen=max_length, padding='post')
 
+        # Predict
+        prediction = model.predict(padded)[0][0]
+        label = "🚫 Spam" if prediction > 0.5 else "✅ Ham"
+        confidence = prediction if prediction > 0.5 else 1 - prediction
+
+        # Result
+        st.subheader("Result:")
+        st.write(f"**{label}** (Confidence: `{confidence * 100:.2f}%`)")
+
+# Footer
 st.markdown("---")
+st.markdown("Made with ❤️ using TensorFlow + Streamlit")
