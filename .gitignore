@@ -1,0 +1,19 @@
+# Ignore Python virtual environments
+venv/
+.venv/
+spam_env/
+
+# Ignore typical Python cache and logs
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.log
+
+# Jupyter
+.ipynb_checkpoints
+
+# Model files (optional)
+*.h5
+*.keras
+*.pickle
